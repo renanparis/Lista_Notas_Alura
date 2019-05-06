@@ -1,6 +1,9 @@
 package com.renanparis.ceed.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,7 +25,24 @@ public class ListNotesActivity extends AppCompatActivity {
         List<Note> list = configNotesExample();
         configRecyclerView(list);
 
+        TextView insertNote = findViewById(R.id.list_notes_insert_note);
+        insertNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListNotesActivity.this, FormNoteActivity.class);
+                startActivity(intent);
+            }
+        });
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        NoteDao dao = new NoteDao();
+        List<Note> list = dao.allNotes();
+        configRecyclerView(list);
+        super.onResume();
     }
 
     private void configRecyclerView(List<Note> list) {
