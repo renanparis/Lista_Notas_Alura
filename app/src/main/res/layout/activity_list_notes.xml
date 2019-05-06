@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.renanparis.ceed.ui.activity.ListNotesActivity">
 
-    <ListView
-        android:id="@+id/activity_list_notes_listView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activity_list_notes_recyclerview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/list_notes_insert_note"
