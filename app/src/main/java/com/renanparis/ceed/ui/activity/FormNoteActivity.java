@@ -2,6 +2,7 @@ package com.renanparis.ceed.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,8 +33,9 @@ public class FormNoteActivity extends AppCompatActivity {
             EditText title = findViewById(R.id.form_note_title);
             EditText description = findViewById(R.id.form_note_description);
             Note noteCreated = new Note(title.getText().toString(), description.getText().toString());
-            NoteDao dao = new NoteDao();
-            dao.insert(noteCreated);
+            Intent intent = new Intent();
+            intent.putExtra("note", noteCreated);
+            setResult(2,intent);
             finish();
         }
         return super.onOptionsItemSelected(item);

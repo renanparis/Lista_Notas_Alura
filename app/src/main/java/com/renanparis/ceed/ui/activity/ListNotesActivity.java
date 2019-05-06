@@ -2,9 +2,11 @@ package com.renanparis.ceed.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,11 +20,15 @@ import java.util.List;
 
 public class ListNotesActivity extends AppCompatActivity {
 
+    private ListNotesAdapter adapter;
+    private List<Note> list;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_notes);
-        List<Note> list = configNotesExample();
+        list = configNotesExample();
         configRecyclerView(list);
 
         TextView insertNote = findViewById(R.id.list_notes_insert_note);
@@ -30,7 +36,7 @@ public class ListNotesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ListNotesActivity.this, FormNoteActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -38,10 +44,17 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            if (requestCode == 1 && resultCode == 2 && data.hasExtra("note")){
+            Note noteReceived = data.getParcelableExtra("note");
+            new NoteDao().insert(noteReceived);
+            adapter.add(noteReceived);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onResume() {
-        NoteDao dao = new NoteDao();
-        List<Note> list = dao.allNotes();
-        configRecyclerView(list);
         super.onResume();
     }
 
@@ -58,7 +71,8 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void configAdapter(List<Note> list, RecyclerView listNotes) {
-        listNotes.setAdapter(new ListNotesAdapter(this, list));
+        adapter = new ListNotesAdapter(this, list);
+        listNotes.setAdapter(adapter);
     }
 
     private List<Note> configNotesExample() {
