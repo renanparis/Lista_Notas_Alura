@@ -2,7 +2,6 @@ package com.renanparis.ceed.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,39 +17,69 @@ import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
 
 import java.util.List;
 
+import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_NOTE;
+import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.REQUEST_CODE_INSERT_NOTE;
+import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.RESULT_CODE_CREATED_NOTE;
+
 public class ListNotesActivity extends AppCompatActivity {
 
     private ListNotesAdapter adapter;
-    private List<Note> list;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_notes);
-        list = configNotesExample();
+        List<Note> list = configNotes();
         configRecyclerView(list);
 
-        TextView insertNote = findViewById(R.id.list_notes_insert_note);
-        insertNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ListNotesActivity.this, FormNoteActivity.class);
-                startActivityForResult(intent, 1);
-            }
-        });
+        configButtonInsertNote();
 
 
     }
 
+    private void configButtonInsertNote() {
+        TextView insertNote = findViewById(R.id.list_notes_insert_note);
+        insertNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFormActivity();
+            }
+        });
+    }
+
+    private void goToFormActivity() {
+        Intent intent = new Intent(ListNotesActivity.this, FormNoteActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_INSERT_NOTE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-            if (requestCode == 1 && resultCode == 2 && data.hasExtra("note")){
-            Note noteReceived = data.getParcelableExtra("note");
-            new NoteDao().insert(noteReceived);
-            adapter.add(noteReceived);
+        if (isRequestCodeInsertNote(REQUEST_CODE_INSERT_NOTE) && isResultCodeCreateNote(RESULT_CODE_CREATED_NOTE) && hasNote(data)) {
+            Note noteReceived = null;
+            if (data != null) {
+                noteReceived = data.getParcelableExtra(KEY_NOTE);
+            }
+            addNote(noteReceived);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private boolean hasNote(@Nullable Intent data) {
+        return data.hasExtra(KEY_NOTE);
+    }
+
+    private void addNote(Note note) {
+        new NoteDao().insert(note);
+        adapter.add(note);
+    }
+
+    private boolean isResultCodeCreateNote(int resultCode) {
+        return resultCode == RESULT_CODE_CREATED_NOTE;
+    }
+
+    private boolean isRequestCodeInsertNote(int requestCode) {
+        return requestCode == REQUEST_CODE_INSERT_NOTE;
     }
 
     @Override
@@ -75,10 +104,9 @@ public class ListNotesActivity extends AppCompatActivity {
         listNotes.setAdapter(adapter);
     }
 
-    private List<Note> configNotesExample() {
+    private List<Note> configNotes() {
         NoteDao dao = new NoteDao();
-        dao.insert(new Note("Primeiro Título", "Primeira Descrição Pequena"),
-                new Note("Segundo Título", "Segunda Descrição muito maior que a primeira"));
+
         return dao.allNotes();
     }
 }

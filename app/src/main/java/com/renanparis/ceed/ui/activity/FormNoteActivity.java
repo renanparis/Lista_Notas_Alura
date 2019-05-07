@@ -1,19 +1,21 @@
 package com.renanparis.ceed.ui.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.renanparis.ceed.R;
-import com.renanparis.ceed.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
 
+import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_NOTE;
+import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.RESULT_CODE_CREATED_NOTE;
+
 public class FormNoteActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +31,28 @@ public class FormNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_ic_save_note){
-            EditText title = findViewById(R.id.form_note_title);
-            EditText description = findViewById(R.id.form_note_description);
-            Note noteCreated = new Note(title.getText().toString(), description.getText().toString());
-            Intent intent = new Intent();
-            intent.putExtra("note", noteCreated);
-            setResult(2,intent);
+        if (isSaveMenu(item)) {
+            Note noteCreated = createNote();
+            returnNote(noteCreated);
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void returnNote(Note note) {
+        Intent intent = new Intent();
+        intent.putExtra(KEY_NOTE, note);
+        setResult(RESULT_CODE_CREATED_NOTE, intent);
+
+    }
+
+    private boolean isSaveMenu(MenuItem item) {
+        return item.getItemId() == R.id.menu_ic_save_note;
+    }
+
+    private Note createNote() {
+        EditText title = findViewById(R.id.form_note_title);
+        EditText description = findViewById(R.id.form_note_description);
+        return new Note(title.getText().toString(), description.getText().toString());
     }
 }
