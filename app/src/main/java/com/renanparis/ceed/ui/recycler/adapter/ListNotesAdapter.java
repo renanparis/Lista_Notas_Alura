@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.renanparis.ceed.R;
 import com.renanparis.ceed.model.Note;
+import com.renanparis.ceed.ui.recycler.adapter.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -18,10 +19,15 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
 
     private final List<Note> notes;
     private final Context context;
+    private OnItemClickListener onItemClickListener;
 
     public ListNotesAdapter(Context context, List<Note> notes) {
         this.context = context;
         this.notes = notes;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -54,15 +60,22 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
 
         private final TextView title;
         private final TextView description;
+        private Note note;
 
         private NotesViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.item_note_title);
             description = itemView.findViewById(R.id.item_note_description);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   onItemClickListener.onItemClick(note);
+                }
+            });
         }
 
         private void setValuesAdapter(Note note) {
-
+            this.note = note;
             title.setText(note.getTitle());
             description.setText(note.getDescription());
         }

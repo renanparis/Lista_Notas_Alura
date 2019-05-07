@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.renanparis.ceed.R;
 import com.renanparis.ceed.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
+import com.renanparis.ceed.ui.recycler.adapter.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -102,10 +104,19 @@ public class ListNotesActivity extends AppCompatActivity {
     private void configAdapter(List<Note> list, RecyclerView listNotes) {
         adapter = new ListNotesAdapter(this, list);
         listNotes.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(Note note) {
+                Toast.makeText(ListNotesActivity.this, note.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private List<Note> configNotes() {
         NoteDao dao = new NoteDao();
+        for (int i = 1; i <= 10; i++){
+            dao.insert(new Note("Titulo " + i, "Descrição " + i));
+        }
 
         return dao.allNotes();
     }
