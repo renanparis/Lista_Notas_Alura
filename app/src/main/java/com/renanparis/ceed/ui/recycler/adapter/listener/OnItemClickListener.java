@@ -4,5 +4,5 @@ import com.renanparis.ceed.model.Note;
 
 public interface OnItemClickListener {
 
-    void onItemClick(Note note);
+    void onItemClick(Note note, int position);
 }

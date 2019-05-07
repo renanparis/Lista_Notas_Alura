@@ -1,10 +1,11 @@
 package com.renanparis.ceed.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,15 +13,40 @@ import com.renanparis.ceed.R;
 import com.renanparis.ceed.model.Note;
 
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_NOTE;
-import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.RESULT_CODE_CREATED_NOTE;
+import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_POSITION;
+import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.POSITION_INVALID;
 
 public class FormNoteActivity extends AppCompatActivity {
 
+
+
+    private int positionReceived = -POSITION_INVALID;
+    private TextView title;
+    private TextView description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_note);
+        startFieldForm();
+
+
+        Intent dataReceived = getIntent();
+        if (dataReceived.hasExtra(KEY_NOTE)){
+            Note noteReceived = dataReceived.getParcelableExtra(KEY_NOTE);
+            positionReceived = dataReceived.getIntExtra(KEY_POSITION, POSITION_INVALID);
+            fillFieldForm(noteReceived);
+        }
+    }
+
+    private void fillFieldForm(Note noteReceived) {
+        title.setText(noteReceived.getTitle());
+        description.setText(noteReceived.getDescription());
+    }
+
+    private void startFieldForm() {
+        title = findViewById(R.id.form_note_title);
+        description = findViewById(R.id.form_note_description);
     }
 
     @Override
@@ -42,7 +68,8 @@ public class FormNoteActivity extends AppCompatActivity {
     private void returnNote(Note note) {
         Intent intent = new Intent();
         intent.putExtra(KEY_NOTE, note);
-        setResult(RESULT_CODE_CREATED_NOTE, intent);
+        intent.putExtra(KEY_POSITION, positionReceived);
+        setResult(Activity.RESULT_OK, intent);
 
     }
 
@@ -51,8 +78,7 @@ public class FormNoteActivity extends AppCompatActivity {
     }
 
     private Note createNote() {
-        EditText title = findViewById(R.id.form_note_title);
-        EditText description = findViewById(R.id.form_note_description);
+
         return new Note(title.getText().toString(), description.getText().toString());
     }
 }
