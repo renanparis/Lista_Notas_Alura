@@ -13,6 +13,7 @@ import com.renanparis.ceed.R;
 import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.recycler.adapter.listener.OnItemClickListener;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.NotesViewHolder> {
@@ -58,6 +59,16 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
 
     public void update(int positionRceived, Note noteReceived) {
         notes.set(positionRceived, noteReceived);
+        notifyDataSetChanged();
+    }
+
+    public void remove(int position) {
+        notes.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void change(int positionHome, int positionEnd) {
+        Collections.swap(notes, positionHome, positionEnd);
         notifyDataSetChanged();
     }
 

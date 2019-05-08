@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import com.renanparis.ceed.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
 import com.renanparis.ceed.ui.recycler.adapter.listener.OnItemClickListener;
+import com.renanparis.ceed.ui.recycler.helper.callback.NoteItemTouchHelperCallback;
 
 import java.util.List;
 
@@ -116,6 +118,12 @@ public class ListNotesActivity extends AppCompatActivity {
         RecyclerView listNotes = findViewById(R.id.activity_list_notes_recyclerview);
         configAdapter(list, listNotes);
         configLayoutManager(listNotes);
+        configItemTouchHelper(listNotes);
+    }
+
+    private void configItemTouchHelper(RecyclerView listNotes) {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NoteItemTouchHelperCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(listNotes);
     }
 
     private void configLayoutManager(RecyclerView listNotes) {
