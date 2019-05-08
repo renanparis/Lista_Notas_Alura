@@ -19,7 +19,8 @@ import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.POSITION_IN
 public class FormNoteActivity extends AppCompatActivity {
 
 
-
+    public static final String TITLE_APPBAR_INSERT_NOTE = "Insere Nota";
+    public static final String TITLE_APPBAR_UPDATE_NOTE = "Altera Nota";
     private int positionReceived = -POSITION_INVALID;
     private TextView title;
     private TextView description;
@@ -28,11 +29,15 @@ public class FormNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_note);
+        setTitle(TITLE_APPBAR_INSERT_NOTE);
         startFieldForm();
 
 
         Intent dataReceived = getIntent();
         if (dataReceived.hasExtra(KEY_NOTE)){
+            setTitle(TITLE_APPBAR_UPDATE_NOTE);
+
+
             Note noteReceived = dataReceived.getParcelableExtra(KEY_NOTE);
             positionReceived = dataReceived.getIntExtra(KEY_POSITION, POSITION_INVALID);
             fillFieldForm(noteReceived);

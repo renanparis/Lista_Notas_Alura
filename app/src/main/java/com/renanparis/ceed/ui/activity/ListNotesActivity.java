@@ -30,6 +30,7 @@ import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.REQUEST_COD
 
 public class ListNotesActivity extends AppCompatActivity {
 
+    public static final String TITLE_APPBAR = "Notas";
     private ListNotesAdapter adapter;
 
 
@@ -37,6 +38,7 @@ public class ListNotesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_notes);
+        setTitle(TITLE_APPBAR);
         List<Note> list = configNotes();
         configRecyclerView(list);
         configButtonInsertNote();
@@ -151,9 +153,7 @@ public class ListNotesActivity extends AppCompatActivity {
 
     private List<Note> configNotes() {
         NoteDao dao = new NoteDao();
-        for (int i = 1; i <= 10; i++) {
-            dao.insert(new Note("Titulo " + i, "Descrição " + i));
-        }
+               
         return dao.allNotes();
     }
 }
