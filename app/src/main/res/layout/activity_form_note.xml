@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <EditText
         android:id="@+id/form_note_title"
@@ -26,9 +27,26 @@
         android:background="@android:color/transparent"
         android:hint="Descrição"
         android:gravity="top"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/form_list_colors"
         app:layout_constraintEnd_toEndOf="@id/form_note_title"
         app:layout_constraintStart_toStartOf="@id/form_note_title"
         app:layout_constraintTop_toBottomOf="@id/form_note_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/form_list_colors"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#eeeeee"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/form_note_description"
+        tools:listitem="@layout/item_form_list_colors">
+
+    </androidx.recyclerview.widget.RecyclerView>
+    
 
 </androidx.constraintlayout.widget.ConstraintLayout>
