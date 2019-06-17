@@ -74,6 +74,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         notifyItemMoved(positionHome, positionEnd);
     }
 
+
     class NotesViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView title;

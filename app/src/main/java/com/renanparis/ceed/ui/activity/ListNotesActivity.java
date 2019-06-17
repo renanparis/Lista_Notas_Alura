@@ -3,6 +3,8 @@ package com.renanparis.ceed.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,10 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.renanparis.ceed.R;
 import com.renanparis.ceed.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
+import com.renanparis.ceed.ui.activity.preferences.NotesPreferences;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
 import com.renanparis.ceed.ui.recycler.adapter.listener.OnItemClickListener;
 import com.renanparis.ceed.ui.recycler.helper.callback.NoteItemTouchHelperCallback;
@@ -32,6 +36,8 @@ public class ListNotesActivity extends AppCompatActivity {
 
     public static final String TITLE_APPBAR = "Notas";
     private ListNotesAdapter adapter;
+    private RecyclerView listNotes;
+    private NotesPreferences preferences;
 
 
     @Override
@@ -40,8 +46,61 @@ public class ListNotesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_notes);
         setTitle(TITLE_APPBAR);
         List<Note> list = configNotes();
+        preferences = new NotesPreferences(this);
         configRecyclerView(list);
         configButtonInsertNote();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_list_options_layout, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.list_linear_layout:
+                configLinearLayoutManager();
+                preferences.setLinearMode(true);
+                invalidateOptionsMenu();
+                break;
+
+            case R.id.list_grid_layout:
+                configStaggeredGridManager();
+                preferences.setLinearMode(false);
+                invalidateOptionsMenu();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (preferences.isLinearMode()) {
+            setGridVisible(menu);
+        } else {
+            setLinearVisible(menu);
+
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void setLinearVisible(Menu menu) {
+        menu.findItem(R.id.list_linear_layout).setVisible(true);
+        menu.findItem(R.id.list_grid_layout).setVisible(false);
+    }
+
+    private void setGridVisible(Menu menu) {
+        menu.findItem(R.id.list_linear_layout).setVisible(false);
+        menu.findItem(R.id.list_grid_layout).setVisible(true);
+    }
+
+    private void configStaggeredGridManager() {
+        StaggeredGridLayoutManager grid = new StaggeredGridLayoutManager(2, 1);
+        listNotes.setLayoutManager(grid);
     }
 
     private void configButtonInsertNote() {
@@ -117,10 +176,20 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void configRecyclerView(List<Note> list) {
-        RecyclerView listNotes = findViewById(R.id.activity_list_notes_recyclerview);
+        listNotes = findViewById(R.id.activity_list_notes_recyclerview);
         configAdapter(list, listNotes);
-        configLayoutManager(listNotes);
+        configPreferencesLayoutMode();
         configItemTouchHelper(listNotes);
+    }
+
+    private void configPreferencesLayoutMode() {
+        if (preferences.isLinearMode()) {
+
+            configLinearLayoutManager();
+
+        } else {
+            configStaggeredGridManager();
+        }
     }
 
     private void configItemTouchHelper(RecyclerView listNotes) {
@@ -128,7 +197,7 @@ public class ListNotesActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(listNotes);
     }
 
-    private void configLayoutManager(RecyclerView listNotes) {
+    private void configLinearLayoutManager() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         listNotes.setLayoutManager(layoutManager);
     }
@@ -153,7 +222,6 @@ public class ListNotesActivity extends AppCompatActivity {
 
     private List<Note> configNotes() {
         NoteDao dao = new NoteDao();
-               
         return dao.allNotes();
     }
 }
