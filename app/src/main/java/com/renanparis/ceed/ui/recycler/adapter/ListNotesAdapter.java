@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.renanparis.ceed.R;
 import com.renanparis.ceed.model.Note;
-import com.renanparis.ceed.ui.recycler.adapter.listener.OnItemClickListener;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +42,10 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
     @Override
     public void onBindViewHolder(@NonNull ListNotesAdapter.NotesViewHolder holder, int position) {
         Note note = notes.get(position);
+        Integer color = note.getColor();
         holder.setValuesAdapter(note);
+        holder.setBackgroundColor(color);
+
     }
 
     @Override
@@ -80,11 +82,13 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         private final TextView title;
         private final TextView description;
         private Note note;
+        private View backgroundItem;
 
         private NotesViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.item_note_title);
             description = itemView.findViewById(R.id.item_note_description);
+            backgroundItem = itemView;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -98,5 +102,15 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
             title.setText(note.getTitle());
             description.setText(note.getDescription());
         }
+
+        private void setBackgroundColor(Integer color){
+            backgroundItem.setBackgroundColor(color);
+        }
     }
+
+    public interface OnItemClickListener {
+
+        void onItemClick(Note note, int position);
+    }
+
 }

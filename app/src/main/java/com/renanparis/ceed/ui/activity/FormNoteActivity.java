@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,45 +28,98 @@ public class FormNoteActivity extends AppCompatActivity {
 
     public static final String TITLE_APPBAR_INSERT_NOTE = "Insere Nota";
     public static final String TITLE_APPBAR_UPDATE_NOTE = "Altera Nota";
+    public static final String KEY_NOTE_COLOR = "noteColor";
     private int positionReceived = -POSITION_INVALID;
     private TextView title;
     private TextView description;
+    private List<Integer> listColors;
+    private RecyclerView paletteColors;
+    private View backgroundForm;
+    private Note note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_note);
-        setTitle(TITLE_APPBAR_INSERT_NOTE);
         startFieldForm();
-        List<Integer> listColors = new Colors().allColors();
+        retrievesSavedData(savedInstanceState);
+        listColors = new Colors().allColors();
+        configAdapter();
+        loadNote();
+    }
 
-        RecyclerView paletteColors = findViewById(R.id.form_list_colors);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        paletteColors.setLayoutManager(layoutManager);
-        paletteColors.setAdapter(new FormAdapter(listColors, this));
-
-
-
-        Intent dataReceived = getIntent();
-        if (dataReceived.hasExtra(KEY_NOTE)){
-            setTitle(TITLE_APPBAR_UPDATE_NOTE);
-
-
-            Note noteReceived = dataReceived.getParcelableExtra(KEY_NOTE);
-            positionReceived = dataReceived.getIntExtra(KEY_POSITION, POSITION_INVALID);
-            fillFieldForm(noteReceived);
+    private void retrievesSavedData(Bundle savedInstanceState) {
+        if (savedInstanceState != null){
+           note = savedInstanceState.getParcelable(KEY_NOTE_COLOR);
         }
     }
 
-    private void fillFieldForm(Note noteReceived) {
-        title.setText(noteReceived.getTitle());
-        description.setText(noteReceived.getDescription());
+    private void loadNote() {
+        Intent dataReceived = getIntent();
+        if (dataReceived.hasExtra(KEY_NOTE)) {
+            setTitle(TITLE_APPBAR_UPDATE_NOTE);
+            note = getNote(dataReceived);
+            fillFieldForm(note);
+        } else {
+            setTitle(TITLE_APPBAR_INSERT_NOTE);
+            setBackgroundColor(searchWhiteColor());
+            note = new Note();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(KEY_NOTE_COLOR, note);
+    }
+
+    private void setBackgroundColor(Integer color) {
+
+        backgroundForm.setBackgroundColor(color);
+    }
+
+    private Note getNote(Intent dataReceived) {
+        note = dataReceived.getParcelableExtra(KEY_NOTE);
+        positionReceived = dataReceived.getIntExtra(KEY_POSITION, POSITION_INVALID);
+        return note;
+    }
+
+    private void configAdapter() {
+        paletteColors = findViewById(R.id.form_list_colors);
+        configLayoutManager();
+        FormAdapter adapter = new FormAdapter(listColors, this);
+        paletteColors.setAdapter(adapter);
+        adapter.setOnItemClickListener(new FormAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Integer color) {
+                backgroundForm.setBackgroundColor(color);
+                note.setColor(color);
+            }
+        });
+    }
+
+    private void configLayoutManager() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        paletteColors.setLayoutManager(layoutManager);
+    }
+
+    private void fillFieldForm(Note note) {
+        title.setText(note.getTitle());
+        description.setText(note.getDescription());
+        backgroundForm.setBackgroundColor(note.getColor());
     }
 
     private void startFieldForm() {
         title = findViewById(R.id.form_note_title);
         description = findViewById(R.id.form_note_description);
+        backgroundForm = findViewById(R.id.form_note_background);
+        backgroundForm.setBackgroundColor(searchWhiteColor());
+    }
+
+    private int searchWhiteColor() {
+        Colors color = new Colors();
+        return color.getWhite();
     }
 
     @Override
@@ -77,8 +131,8 @@ public class FormNoteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (isSaveMenu(item)) {
-            Note noteCreated = createNote();
-            returnNote(noteCreated);
+            Note note = createNote();
+            returnNote(note);
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -97,7 +151,8 @@ public class FormNoteActivity extends AppCompatActivity {
     }
 
     private Note createNote() {
-
-        return new Note(title.getText().toString(), description.getText().toString());
+        note.setTitle(title.getText().toString());
+        note.setDescription(description.getText().toString());
+        return note;
     }
 }

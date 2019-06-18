@@ -21,7 +21,6 @@ import com.renanparis.ceed.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.activity.preferences.NotesPreferences;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
-import com.renanparis.ceed.ui.recycler.adapter.listener.OnItemClickListener;
 import com.renanparis.ceed.ui.recycler.helper.callback.NoteItemTouchHelperCallback;
 
 import java.util.List;
@@ -205,12 +204,7 @@ public class ListNotesActivity extends AppCompatActivity {
     private void configAdapter(List<Note> list, RecyclerView listNotes) {
         adapter = new ListNotesAdapter(this, list);
         listNotes.setAdapter(adapter);
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(Note note, int position) {
-                goToUpdateNoteFormActivity(note, position);
-            }
-        });
+        adapter.setOnItemClickListener((note, position) -> goToUpdateNoteFormActivity(note, position));
     }
 
     private void goToUpdateNoteFormActivity(Note note, int position) {

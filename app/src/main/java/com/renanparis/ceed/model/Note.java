@@ -5,17 +5,41 @@ import android.os.Parcelable;
 
 public class Note implements Parcelable {
 
-    private final String title;
-    private final String description;
+    private String title;
+    private String description;
+    private int color;
 
     public Note(String title, String description) {
         this.title = title;
         this.description = description;
     }
 
-    protected Note(Parcel in) {
+    public Note() {
+
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+
+    private Note(Parcel in) {
         title = in.readString();
         description = in.readString();
+        color = in.readInt();
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -47,5 +71,6 @@ public class Note implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(description);
+        dest.writeInt(color);
     }
 }
