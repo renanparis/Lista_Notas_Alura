@@ -8,9 +8,15 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.renanparis.ceed.R;
+import com.renanparis.ceed.model.Colors;
 import com.renanparis.ceed.model.Note;
+import com.renanparis.ceed.ui.recycler.adapter.FormAdapter;
+
+import java.util.List;
 
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_NOTE;
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_POSITION;
@@ -31,6 +37,14 @@ public class FormNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_form_note);
         setTitle(TITLE_APPBAR_INSERT_NOTE);
         startFieldForm();
+        List<Integer> listColors = new Colors().allColors();
+
+        RecyclerView paletteColors = findViewById(R.id.form_list_colors);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        paletteColors.setLayoutManager(layoutManager);
+        paletteColors.setAdapter(new FormAdapter(listColors, this));
+
 
 
         Intent dataReceived = getIntent();
