@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.renanparis.ceed.R;
-import com.renanparis.ceed.dao.NoteDao;
+import com.renanparis.ceed.dao.FNote;
 import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.activity.preferences.NotesPreferences;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
@@ -149,7 +149,7 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void updateNote(Note noteReceived, int positionReceived) {
-        new NoteDao().update(positionReceived, noteReceived);
+        new FNote().update(positionReceived, noteReceived);
         adapter.update(positionReceived, noteReceived);
     }
 
@@ -162,7 +162,7 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void addNote(Note note) {
-        new NoteDao().insert(note);
+        new FNote().insert(note);
         adapter.add(note);
     }
 
@@ -215,7 +215,7 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private List<Note> configNotes() {
-        NoteDao dao = new NoteDao();
+        FNote dao = new FNote();
         return dao.allNotes();
     }
 }

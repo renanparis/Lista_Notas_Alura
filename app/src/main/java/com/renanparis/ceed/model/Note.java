@@ -3,8 +3,14 @@ package com.renanparis.ceed.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Note implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    private long id;
     private String title;
     private String description;
     private int color;
@@ -33,7 +39,6 @@ public class Note implements Parcelable {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
 
     private Note(Parcel in) {
