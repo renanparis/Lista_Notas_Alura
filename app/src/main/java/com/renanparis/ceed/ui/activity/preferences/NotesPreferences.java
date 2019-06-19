@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 
 public class NotesPreferences {
 
-    public static final String LAYOUT_MODE = "linear_mode";
-    public static final String NOTES_PREFERENCES = "com.renanparis.ceed.ui.activity.preferences.NotesPreferences";
+    private static final String LAYOUT_MODE = "linear_mode";
+    private static final String NOTES_PREFERENCES = "com.renanparis.ceed.ui.activity.preferences.NotesPreferences";
     private Context context;
 
     public NotesPreferences(Context context) {
@@ -19,8 +19,6 @@ public class NotesPreferences {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(LAYOUT_MODE, value);
         editor.commit();
-
-
     }
 
     private SharedPreferences getSharedPreferences() {
@@ -32,6 +30,5 @@ public class NotesPreferences {
         SharedPreferences preferences = getSharedPreferences();
         return preferences.getBoolean(LAYOUT_MODE, false);
     }
-
 
 }
