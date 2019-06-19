@@ -76,6 +76,11 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         notifyItemMoved(positionHome, positionEnd);
     }
 
+    public void addNote(Note note) {
+        notes.add(note);
+        notifyItemInserted(0);
+    }
+
 
     class NotesViewHolder extends RecyclerView.ViewHolder {
 

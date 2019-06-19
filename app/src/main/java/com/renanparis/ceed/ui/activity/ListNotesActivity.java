@@ -17,12 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.renanparis.ceed.R;
-import com.renanparis.ceed.dao.FNote;
+import com.renanparis.ceed.asynctask.SaveNoteTask;
+import com.renanparis.ceed.database.dao.NoteDao;
+import com.renanparis.ceed.database.ListNotesDatabase;
 import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.activity.preferences.NotesPreferences;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
 import com.renanparis.ceed.ui.recycler.helper.callback.NoteItemTouchHelperCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_NOTE;
@@ -37,6 +40,8 @@ public class ListNotesActivity extends AppCompatActivity {
     private ListNotesAdapter adapter;
     private RecyclerView listNotes;
     private NotesPreferences preferences;
+    private NoteDao dao;
+    private Note note;
 
 
     @Override
@@ -44,8 +49,10 @@ public class ListNotesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_notes);
         setTitle(TITLE_APPBAR);
-        List<Note> list = configNotes();
+        ListNotesDatabase db = ListNotesDatabase.getInstance(this);
+        dao = db.getNoteDao();
         preferences = new NotesPreferences(this);
+        List<Note> list = new ArrayList();
         configRecyclerView(list);
         configButtonInsertNote();
     }
@@ -121,11 +128,17 @@ public class ListNotesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (isRequestCodeInsertNote(requestCode)) {
             if (isResultOk(resultCode) && hasNote(data)) {
-                Note noteReceived = null;
+
                 if (data != null) {
-                    noteReceived = data.getParcelableExtra(KEY_NOTE);
+                    note = data.getParcelableExtra(KEY_NOTE);
                 }
-                addNote(noteReceived);
+                new SaveNoteTask(dao, note, new SaveNoteTask.EndsListener() {
+                    @Override
+                    public void whenItEnds(Long id) {
+                        note.setId(id);
+                        adapter.addNote(note);
+                    }
+                }).execute();
             }
         }
 
@@ -134,7 +147,7 @@ public class ListNotesActivity extends AppCompatActivity {
                 Note noteReceived = data.getParcelableExtra(KEY_NOTE);
                 int positionReceived = data.getIntExtra(KEY_POSITION, POSITION_INVALID);
                 if (positionReceived > POSITION_INVALID) {
-                    updateNote(noteReceived, positionReceived);
+//                    updateNote(noteReceived, positionReceived);
                     Toast.makeText(this, "Nota alterada com sucesso", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -148,10 +161,10 @@ public class ListNotesActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void updateNote(Note noteReceived, int positionReceived) {
-        new FNote().update(positionReceived, noteReceived);
-        adapter.update(positionReceived, noteReceived);
-    }
+//    private void updateNote(Note noteReceived, int positionReceived) {
+//        new FNote().update(positionReceived, noteReceived);
+//        adapter.update(positionReceived, noteReceived);
+//    }
 
     private boolean isaRequestCodeUpdateNote(int requestCode) {
         return requestCode == REQUEST_CODE_UPDATE_NOTE;
@@ -161,10 +174,10 @@ public class ListNotesActivity extends AppCompatActivity {
         return data.hasExtra(KEY_NOTE);
     }
 
-    private void addNote(Note note) {
-        new FNote().insert(note);
-        adapter.add(note);
-    }
+//    private void addNote(Note note) {
+//        new FNote().insert(note);
+//        adapter.add(note);
+//    }
 
     private boolean isResultOk(int resultCode) {
         return resultCode == Activity.RESULT_OK;
@@ -214,8 +227,8 @@ public class ListNotesActivity extends AppCompatActivity {
         startActivityForResult(sendDataToForm, REQUEST_CODE_UPDATE_NOTE);
     }
 
-    private List<Note> configNotes() {
-        FNote dao = new FNote();
-        return dao.allNotes();
-    }
+//    private List<Note> configNotes() {
+//        FNote dao = new FNote();
+//        return dao.allNotes();
+//    }
 }

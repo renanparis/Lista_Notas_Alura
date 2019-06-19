@@ -10,18 +10,22 @@ import androidx.room.PrimaryKey;
 public class Note implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    private long id;
+    private long id = 0;
     private String title;
     private String description;
     private int color;
 
-    public Note(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
 
     public Note() {
 
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getColor() {
