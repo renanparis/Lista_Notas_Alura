@@ -19,7 +19,7 @@ public abstract class ListNotesDatabase extends RoomDatabase {
     public abstract NoteDao getNoteDao();
 
     public static ListNotesDatabase getInstance(Context context){
-        if (instance != null){
+        if (instance == null){
 
             instance = Room.databaseBuilder(context, ListNotesDatabase.class, NAME_DB).build();
         }

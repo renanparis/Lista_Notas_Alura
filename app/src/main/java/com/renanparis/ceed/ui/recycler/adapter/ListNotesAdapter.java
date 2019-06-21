@@ -53,9 +53,10 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         return notes.size();
     }
 
-    public void add(Note note) {
-        notes.add(note);
-        notifyDataSetChanged();
+    @Override
+    public long getItemId(int position) {
+        Note note = notes.get(position);
+        return note.getId();
 
     }
 
@@ -77,7 +78,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
     }
 
     public void addNote(Note note) {
-        notes.add(note);
+        notes.add(0, note);
         notifyItemInserted(0);
     }
 

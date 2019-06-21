@@ -51,6 +51,7 @@ public class ListNotesActivity extends AppCompatActivity {
         setTitle(TITLE_APPBAR);
         ListNotesDatabase db = ListNotesDatabase.getInstance(this);
         dao = db.getNoteDao();
+
         preferences = new NotesPreferences(this);
         List<Note> list = new ArrayList();
         configRecyclerView(list);
@@ -216,6 +217,7 @@ public class ListNotesActivity extends AppCompatActivity {
 
     private void configAdapter(List<Note> list, RecyclerView listNotes) {
         adapter = new ListNotesAdapter(this, list);
+        adapter.setHasStableIds(true);
         listNotes.setAdapter(adapter);
         adapter.setOnItemClickListener((note, position) -> goToUpdateNoteFormActivity(note, position));
     }
