@@ -18,14 +18,14 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.renanparis.ceed.R;
 import com.renanparis.ceed.asynctask.SaveNoteTask;
-import com.renanparis.ceed.database.dao.NoteDao;
+import com.renanparis.ceed.asynctask.SearchAllNotes;
 import com.renanparis.ceed.database.ListNotesDatabase;
+import com.renanparis.ceed.database.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.activity.preferences.NotesPreferences;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
 import com.renanparis.ceed.ui.recycler.helper.callback.NoteItemTouchHelperCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_NOTE;
@@ -51,11 +51,18 @@ public class ListNotesActivity extends AppCompatActivity {
         setTitle(TITLE_APPBAR);
         ListNotesDatabase db = ListNotesDatabase.getInstance(this);
         dao = db.getNoteDao();
-
         preferences = new NotesPreferences(this);
-        List<Note> list = new ArrayList();
-        configRecyclerView(list);
+        configList();
         configButtonInsertNote();
+    }
+
+    private void configList() {
+        new SearchAllNotes(dao, new SearchAllNotes.FinishListener() {
+            @Override
+            public void whenItEnds(List<Note> notes) {
+                configRecyclerView(notes);
+            }
+        }).execute();
     }
 
     @Override
@@ -133,13 +140,8 @@ public class ListNotesActivity extends AppCompatActivity {
                 if (data != null) {
                     note = data.getParcelableExtra(KEY_NOTE);
                 }
-                new SaveNoteTask(dao, note, new SaveNoteTask.EndsListener() {
-                    @Override
-                    public void whenItEnds(Long id) {
-                        note.setId(id);
-                        adapter.addNote(note);
-                    }
-                }).execute();
+                new SaveNoteTask(dao, note).execute();
+                adapter.addNote(note);
             }
         }
 
@@ -175,10 +177,6 @@ public class ListNotesActivity extends AppCompatActivity {
         return data.hasExtra(KEY_NOTE);
     }
 
-//    private void addNote(Note note) {
-//        new FNote().insert(note);
-//        adapter.add(note);
-//    }
 
     private boolean isResultOk(int resultCode) {
         return resultCode == Activity.RESULT_OK;
@@ -229,8 +227,4 @@ public class ListNotesActivity extends AppCompatActivity {
         startActivityForResult(sendDataToForm, REQUEST_CODE_UPDATE_NOTE);
     }
 
-//    private List<Note> configNotes() {
-//        FNote dao = new FNote();
-//        return dao.allNotes();
-//    }
 }
