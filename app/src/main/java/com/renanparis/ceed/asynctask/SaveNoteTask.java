@@ -32,7 +32,8 @@ public class SaveNoteTask extends AsyncTask<Void, Void, Long> {
 
     }
 
-    public interface FinishListener{
+    public interface FinishListener {
+
         void whenItEnds(Long id);
     }
 }

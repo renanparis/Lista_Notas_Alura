@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,8 +21,6 @@ import com.renanparis.ceed.ui.recycler.adapter.FormAdapter;
 import java.util.List;
 
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_NOTE;
-import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_POSITION;
-import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.POSITION_INVALID;
 
 public class FormNoteActivity extends AppCompatActivity {
 
@@ -29,7 +28,6 @@ public class FormNoteActivity extends AppCompatActivity {
     public static final String TITLE_APPBAR_INSERT_NOTE = "Insere Nota";
     public static final String TITLE_APPBAR_UPDATE_NOTE = "Altera Nota";
     public static final String KEY_NOTE_COLOR = "noteColor";
-    private int positionReceived = -POSITION_INVALID;
     private TextView title;
     private TextView description;
     private List<Integer> listColors;
@@ -60,6 +58,7 @@ public class FormNoteActivity extends AppCompatActivity {
             setTitle(TITLE_APPBAR_UPDATE_NOTE);
             note = getNote(dataReceived);
             fillFieldForm(note);
+//            Toast.makeText(this, " form id " + note.getId(), Toast.LENGTH_SHORT).show();
         } else {
             setTitle(TITLE_APPBAR_INSERT_NOTE);
             setBackgroundColor(searchWhiteColor());
@@ -80,7 +79,6 @@ public class FormNoteActivity extends AppCompatActivity {
 
     private Note getNote(Intent dataReceived) {
         note = dataReceived.getParcelableExtra(KEY_NOTE);
-        positionReceived = dataReceived.getIntExtra(KEY_POSITION, POSITION_INVALID);
         return note;
     }
 
@@ -131,7 +129,7 @@ public class FormNoteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (isSaveMenu(item)) {
-            Note note = createNote();
+            createNote();
             returnNote(note);
             finish();
         }
@@ -141,7 +139,6 @@ public class FormNoteActivity extends AppCompatActivity {
     private void returnNote(Note note) {
         Intent intent = new Intent();
         intent.putExtra(KEY_NOTE, note);
-        intent.putExtra(KEY_POSITION, positionReceived);
         setResult(Activity.RESULT_OK, intent);
 
     }
@@ -150,9 +147,9 @@ public class FormNoteActivity extends AppCompatActivity {
         return item.getItemId() == R.id.menu_ic_save_note;
     }
 
-    private Note createNote() {
+    private void createNote() {
         note.setTitle(title.getText().toString());
         note.setDescription(description.getText().toString());
-        return note;
+
     }
 }

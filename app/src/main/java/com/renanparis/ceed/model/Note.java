@@ -47,9 +47,11 @@ public class Note implements Parcelable {
 
 
     private Note(Parcel in) {
+        id = in.readLong();
         title = in.readString();
         description = in.readString();
         color = in.readInt();
+        position = in.readInt();
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -79,9 +81,12 @@ public class Note implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeLong(id);
         dest.writeString(title);
         dest.writeString(description);
         dest.writeInt(color);
+        dest.writeInt(position);
     }
 
     public int getPosition() {

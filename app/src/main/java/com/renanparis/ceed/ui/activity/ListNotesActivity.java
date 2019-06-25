@@ -30,8 +30,6 @@ import com.renanparis.ceed.ui.recycler.helper.callback.NoteItemTouchHelperCallba
 import java.util.List;
 
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_NOTE;
-import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.KEY_POSITION;
-import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.POSITION_INVALID;
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.REQUEST_CODE_INSERT_NOTE;
 import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.REQUEST_CODE_UPDATE_NOTE;
 
@@ -156,28 +154,22 @@ public class ListNotesActivity extends AppCompatActivity {
 
         if (isaRequestCodeUpdateNote(requestCode)) {
             if (isResultOk(resultCode) && hasNote(data)) {
-                note = data.getParcelableExtra(KEY_NOTE);
-                int positionReceived = data.getIntExtra(KEY_POSITION, POSITION_INVALID);
-                if (positionReceived > POSITION_INVALID) {
+                if (data != null) {
+                    note = data.getParcelableExtra(KEY_NOTE);
+                }
+                if (note.getId() > 0 ){
+
                     new UpdateNoteTask(dao, note).execute();
                     adapter.updateNote(note);
                     Toast.makeText(this, "Nota alterada com sucesso", Toast.LENGTH_SHORT).show();
 
-                } else {
-                    Toast.makeText(this,
-                            "Ocorreu um problema, informar o suporte o ocorrido", Toast.LENGTH_SHORT).show();
-
                 }
+
             }
 
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-//    private void updateNote(Note noteReceived, int positionReceived) {
-//        new FNote().update(positionReceived, noteReceived);
-//        adapter.update(positionReceived, noteReceived);
-//    }
 
     private boolean isaRequestCodeUpdateNote(int requestCode) {
         return requestCode == REQUEST_CODE_UPDATE_NOTE;
@@ -224,17 +216,17 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void configAdapter(List<Note> list, RecyclerView listNotes) {
-        adapter = new ListNotesAdapter(this, list);
+        adapter = new ListNotesAdapter(this, list, dao);
         listNotes.setAdapter(adapter);
-        adapter.setOnItemClickListener((note, position) -> goToUpdateNoteFormActivity(note, position));
+        adapter.setOnItemClickListener((note) -> goToUpdateNoteFormActivity(note));
     }
 
-    private void goToUpdateNoteFormActivity(Note note, int position) {
+    private void goToUpdateNoteFormActivity(Note note) {
         Intent sendDataToForm = new Intent(ListNotesActivity.this, FormNoteActivity.class);
         sendDataToForm.putExtra(KEY_NOTE, note);
-        sendDataToForm.putExtra(KEY_POSITION, position);
         startActivityForResult(sendDataToForm, REQUEST_CODE_UPDATE_NOTE);
-        Toast.makeText(this, "Posição " + note.getPosition(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Posição " + note.getPosition()
+                +" id " + note.getId(), Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.renanparis.ceed.R;
+import com.renanparis.ceed.asynctask.SavePositionTask;
+import com.renanparis.ceed.database.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
 
 import java.util.Collections;
@@ -20,10 +22,12 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
     private final List<Note> notes;
     private final Context context;
     private OnItemClickListener onItemClickListener;
-
-    public ListNotesAdapter(Context context, List<Note> notes) {
+    private NoteDao dao;
+    public ListNotesAdapter(Context context, List<Note> notes, NoteDao dao) {
         this.context = context;
         this.notes = notes;
+        this.dao = dao;
+        setHasStableIds(true);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -53,19 +57,21 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         return notes.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+
+        return notes.get(position).getId();
+    }
+
     public void updateNotePosition() {
 
         for (int i = 0; i < notes.size(); i++) {
             if (notes.get(i).getPosition() != i) {
                 notes.get(i).setPosition(i);
+                new SavePositionTask(dao, notes.get(i));
+
             }
         }
-    }
-
-
-    public void update(int positionRceived, Note noteReceived) {
-        notes.set(positionRceived, noteReceived);
-        notifyDataSetChanged();
     }
 
     public void remove(int position) {
@@ -81,9 +87,9 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
     }
 
     public void addNote(Note note) {
-        setNotePosition(note);
         notes.add(0, note);
         notifyItemInserted(0);
+        updateNotePosition();
     }
 
     private void setNotePosition(Note note) {
@@ -92,8 +98,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
 
     public void updateNote(Note note) {
         notes.set(note.getPosition(), note);
-        notifyItemChanged(note.getPosition());
-
+        notifyItemChanged(note.getPosition(), note);
     }
 
 
@@ -112,7 +117,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onItemClick(note, getAdapterPosition());
+                    onItemClickListener.onItemClick(note);
                 }
             });
         }
@@ -131,7 +136,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
 
     public interface OnItemClickListener {
 
-        void onItemClick(Note note, int position);
+        void onItemClick(Note note);
     }
 
 }
