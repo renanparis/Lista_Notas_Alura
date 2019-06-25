@@ -4,14 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.renanparis.ceed.asynctask.RemoveNoteTask;
+import com.renanparis.ceed.database.dao.NoteDao;
+import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
 
 public class NoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private ListNotesAdapter adapter;
+    private NoteDao dao;
 
-    public NoteItemTouchHelperCallback(ListNotesAdapter adapter) {
+    public NoteItemTouchHelperCallback(ListNotesAdapter adapter, NoteDao dao) {
         this.adapter = adapter;
+        this.dao = dao;
     }
 
     @Override
@@ -20,7 +25,7 @@ public class NoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
         int slideNote = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
         int dragsNote = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
                 | ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-        return makeMovementFlags(dragsNote,slideNote);
+        return makeMovementFlags(dragsNote, slideNote);
     }
 
     @Override
@@ -28,10 +33,10 @@ public class NoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
         return false;
     }
 
-    @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-    }
+//    @Override
+//    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//
+//    }
 
 //    @Override
 //    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -47,16 +52,14 @@ public class NoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
 //        adapter.change(positionHome, positionEnd);
 //    }
 
-//    @Override
-//    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//        int position = viewHolder.getAdapterPosition();
-//        removeNote(position);
-//
-//    }
+    @Override
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        int position = viewHolder.getAdapterPosition();
+        removeNote(position);
 
-//    private void removeNote(int position) {
-//        FNote dao = new FNote();
-//        dao.remove(position);
-//        adapter.remove(position);
-//    }
+    }
+
+    private void removeNote(int position) {
+        adapter.remove(position);
+    }
 }

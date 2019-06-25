@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.renanparis.ceed.R;
+import com.renanparis.ceed.asynctask.RemoveNoteTask;
 import com.renanparis.ceed.asynctask.SavePositionTask;
 import com.renanparis.ceed.database.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
@@ -75,10 +76,13 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
     }
 
     public void remove(int position) {
+        Note note = notes.get(position);
+        new RemoveNoteTask(dao, note).execute();
         notes.remove(position);
-        notifyDataSetChanged();
-        notifyItemRemoved(position);
+        notifyItemRangeRemoved(position, getItemCount());
+        updateNotePosition();
     }
+
 
     public void change(int positionHome, int positionEnd) {
         Collections.swap(notes, positionHome, positionEnd);
@@ -92,9 +96,6 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         updateNotePosition();
     }
 
-    private void setNotePosition(Note note) {
-        note.setPosition((int) note.getId());
-    }
 
     public void updateNote(Note note) {
         notes.set(note.getPosition(), note);

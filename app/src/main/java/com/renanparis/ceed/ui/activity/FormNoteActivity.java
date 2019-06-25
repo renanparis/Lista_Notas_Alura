@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,7 +57,6 @@ public class FormNoteActivity extends AppCompatActivity {
             setTitle(TITLE_APPBAR_UPDATE_NOTE);
             note = getNote(dataReceived);
             fillFieldForm(note);
-//            Toast.makeText(this, " form id " + note.getId(), Toast.LENGTH_SHORT).show();
         } else {
             setTitle(TITLE_APPBAR_INSERT_NOTE);
             setBackgroundColor(searchWhiteColor());

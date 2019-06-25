@@ -145,7 +145,7 @@ public class ListNotesActivity extends AppCompatActivity {
                         note.setId(id);
                         adapter.addNote(note);
                         Toast.makeText(ListNotesActivity.this,
-                                "Nota Incluída com Sucesso " + note.getId(), Toast.LENGTH_SHORT).show();
+                                "Nota incluída com Sucesso " + note.getId(), Toast.LENGTH_SHORT).show();
 
                     }
                 }).execute();
@@ -157,14 +157,9 @@ public class ListNotesActivity extends AppCompatActivity {
                 if (data != null) {
                     note = data.getParcelableExtra(KEY_NOTE);
                 }
-                if (note.getId() > 0 ){
-
                     new UpdateNoteTask(dao, note).execute();
                     adapter.updateNote(note);
                     Toast.makeText(this, "Nota alterada com sucesso", Toast.LENGTH_SHORT).show();
-
-                }
-
             }
 
         }
@@ -206,7 +201,7 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void configItemTouchHelper(RecyclerView listNotes) {
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NoteItemTouchHelperCallback(adapter));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NoteItemTouchHelperCallback(adapter, dao));
         itemTouchHelper.attachToRecyclerView(listNotes);
     }
 
@@ -225,8 +220,6 @@ public class ListNotesActivity extends AppCompatActivity {
         Intent sendDataToForm = new Intent(ListNotesActivity.this, FormNoteActivity.class);
         sendDataToForm.putExtra(KEY_NOTE, note);
         startActivityForResult(sendDataToForm, REQUEST_CODE_UPDATE_NOTE);
-        Toast.makeText(this, "Posição " + note.getPosition()
-                +" id " + note.getId(), Toast.LENGTH_SHORT).show();
     }
 
 }
