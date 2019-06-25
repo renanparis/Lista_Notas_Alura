@@ -14,6 +14,7 @@ public class Note implements Parcelable {
     private String title;
     private String description;
     private int color;
+    private int position;
 
 
     public Note() {
@@ -81,5 +82,13 @@ public class Note implements Parcelable {
         dest.writeString(title);
         dest.writeString(description);
         dest.writeInt(color);
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

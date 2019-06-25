@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.renanparis.ceed.R;
 import com.renanparis.ceed.asynctask.SaveNoteTask;
 import com.renanparis.ceed.asynctask.SearchAllNotes;
+import com.renanparis.ceed.asynctask.UpdateNoteTask;
 import com.renanparis.ceed.database.ListNotesDatabase;
 import com.renanparis.ceed.database.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
@@ -140,17 +141,26 @@ public class ListNotesActivity extends AppCompatActivity {
                 if (data != null) {
                     note = data.getParcelableExtra(KEY_NOTE);
                 }
-                new SaveNoteTask(dao, note).execute();
-                adapter.addNote(note);
+                new SaveNoteTask(dao, note, new SaveNoteTask.FinishListener() {
+                    @Override
+                    public void whenItEnds(Long id) {
+                        note.setId(id);
+                        adapter.addNote(note);
+                        Toast.makeText(ListNotesActivity.this,
+                                "Nota Incluída com Sucesso " + note.getId(), Toast.LENGTH_SHORT).show();
+
+                    }
+                }).execute();
             }
         }
 
         if (isaRequestCodeUpdateNote(requestCode)) {
             if (isResultOk(resultCode) && hasNote(data)) {
-                Note noteReceived = data.getParcelableExtra(KEY_NOTE);
+                note = data.getParcelableExtra(KEY_NOTE);
                 int positionReceived = data.getIntExtra(KEY_POSITION, POSITION_INVALID);
                 if (positionReceived > POSITION_INVALID) {
-//                    updateNote(noteReceived, positionReceived);
+                    new UpdateNoteTask(dao, note).execute();
+                    adapter.updateNote(note);
                     Toast.makeText(this, "Nota alterada com sucesso", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -215,7 +225,6 @@ public class ListNotesActivity extends AppCompatActivity {
 
     private void configAdapter(List<Note> list, RecyclerView listNotes) {
         adapter = new ListNotesAdapter(this, list);
-        adapter.setHasStableIds(true);
         listNotes.setAdapter(adapter);
         adapter.setOnItemClickListener((note, position) -> goToUpdateNoteFormActivity(note, position));
     }
@@ -225,6 +234,7 @@ public class ListNotesActivity extends AppCompatActivity {
         sendDataToForm.putExtra(KEY_NOTE, note);
         sendDataToForm.putExtra(KEY_POSITION, position);
         startActivityForResult(sendDataToForm, REQUEST_CODE_UPDATE_NOTE);
+        Toast.makeText(this, "Posição " + note.getPosition(), Toast.LENGTH_SHORT).show();
     }
 
 }

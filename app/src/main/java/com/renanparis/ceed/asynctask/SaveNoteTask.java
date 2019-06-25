@@ -10,10 +10,12 @@ public class SaveNoteTask extends AsyncTask<Void, Void, Long> {
 
     private NoteDao dao;
     private Note note;
+    private FinishListener listener;
 
-    public SaveNoteTask(NoteDao dao, Note note) {
+    public SaveNoteTask(NoteDao dao, Note note, FinishListener listener) {
         this.dao = dao;
         this.note = note;
+        this.listener = listener;
     }
 
     @Override
@@ -22,4 +24,15 @@ public class SaveNoteTask extends AsyncTask<Void, Void, Long> {
         return dao.saveNote(note);
     }
 
+
+    @Override
+    protected void onPostExecute(Long id) {
+        super.onPostExecute(id);
+        listener.whenItEnds(id);
+
+    }
+
+    public interface FinishListener{
+        void whenItEnds(Long id);
+    }
 }

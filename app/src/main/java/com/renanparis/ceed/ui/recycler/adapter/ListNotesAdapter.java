@@ -53,12 +53,15 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         return notes.size();
     }
 
-    @Override
-    public long getItemId(int position) {
-        Note note = notes.get(position);
-        return note.getId();
+    public void updateNotePosition() {
 
+        for (int i = 0; i < notes.size(); i++) {
+            if (notes.get(i).getPosition() != i) {
+                notes.get(i).setPosition(i);
+            }
+        }
     }
+
 
     public void update(int positionRceived, Note noteReceived) {
         notes.set(positionRceived, noteReceived);
@@ -78,8 +81,19 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
     }
 
     public void addNote(Note note) {
+        setNotePosition(note);
         notes.add(0, note);
         notifyItemInserted(0);
+    }
+
+    private void setNotePosition(Note note) {
+        note.setPosition((int) note.getId());
+    }
+
+    public void updateNote(Note note) {
+        notes.set(note.getPosition(), note);
+        notifyItemChanged(note.getPosition());
+
     }
 
 
@@ -98,10 +112,11 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   onItemClickListener.onItemClick(note, getAdapterPosition());
+                    onItemClickListener.onItemClick(note, getAdapterPosition());
                 }
             });
         }
+
 
         private void setValuesAdapter(Note note) {
             this.note = note;
@@ -109,7 +124,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
             description.setText(note.getDescription());
         }
 
-        private void setBackgroundColor(Integer color){
+        private void setBackgroundColor(Integer color) {
             backgroundItem.setBackgroundColor(color);
         }
     }
