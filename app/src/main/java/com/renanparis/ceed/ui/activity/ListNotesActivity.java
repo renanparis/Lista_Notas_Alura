@@ -56,7 +56,7 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void configList() {
-        new SearchAllNotes(dao, new SearchAllNotes.FinishListener() {
+        new SearchAllNotes(dao, new SearchAllNotes.FinishListenerSearchAllNotes() {
             @Override
             public void whenItEnds(List<Note> notes) {
                 configRecyclerView(notes);
@@ -139,15 +139,12 @@ public class ListNotesActivity extends AppCompatActivity {
                 if (data != null) {
                     note = data.getParcelableExtra(KEY_NOTE);
                 }
-                new SaveNoteTask(dao, note, new SaveNoteTask.FinishListener() {
-                    @Override
-                    public void whenItEnds(Long id) {
-                        note.setId(id);
-                        adapter.addNote(note);
-                        Toast.makeText(ListNotesActivity.this,
-                                "Nota incluída com Sucesso " + note.getId(), Toast.LENGTH_SHORT).show();
+                new SaveNoteTask(dao, note, id -> {
+                    note.setId(id);
+                    adapter.addNote(note);
+                    Toast.makeText(ListNotesActivity.this,
+                            "Nota incluída com Sucesso " + note.getId(), Toast.LENGTH_SHORT).show();
 
-                    }
                 }).execute();
             }
         }
@@ -201,7 +198,7 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void configItemTouchHelper(RecyclerView listNotes) {
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NoteItemTouchHelperCallback(adapter, dao));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new NoteItemTouchHelperCallback(adapter));
         itemTouchHelper.attachToRecyclerView(listNotes);
     }
 

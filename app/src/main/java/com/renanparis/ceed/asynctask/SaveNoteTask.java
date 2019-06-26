@@ -10,9 +10,9 @@ public class SaveNoteTask extends AsyncTask<Void, Void, Long> {
 
     private NoteDao dao;
     private Note note;
-    private FinishListener listener;
+    private FinishListenerSaveNote listener;
 
-    public SaveNoteTask(NoteDao dao, Note note, FinishListener listener) {
+    public SaveNoteTask(NoteDao dao, Note note, FinishListenerSaveNote listener) {
         this.dao = dao;
         this.note = note;
         this.listener = listener;
@@ -32,7 +32,7 @@ public class SaveNoteTask extends AsyncTask<Void, Void, Long> {
 
     }
 
-    public interface FinishListener {
+    public interface FinishListenerSaveNote {
 
         void whenItEnds(Long id);
     }

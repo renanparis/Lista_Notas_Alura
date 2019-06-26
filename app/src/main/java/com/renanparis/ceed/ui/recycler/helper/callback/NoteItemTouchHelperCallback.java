@@ -4,19 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.renanparis.ceed.asynctask.RemoveNoteTask;
-import com.renanparis.ceed.database.dao.NoteDao;
-import com.renanparis.ceed.model.Note;
 import com.renanparis.ceed.ui.recycler.adapter.ListNotesAdapter;
 
 public class NoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private ListNotesAdapter adapter;
-    private NoteDao dao;
 
-    public NoteItemTouchHelperCallback(ListNotesAdapter adapter, NoteDao dao) {
+    public NoteItemTouchHelperCallback(ListNotesAdapter adapter) {
         this.adapter = adapter;
-        this.dao = dao;
     }
 
     @Override
@@ -30,27 +25,18 @@ public class NoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        return false;
+        int positionHome = viewHolder.getAdapterPosition();
+        int positionEnd = target.getAdapterPosition();
+        changeNote(positionHome, positionEnd);
+        return true;
     }
 
-//    @Override
-//    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//
-//    }
 
-//    @Override
-//    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//        FNote dao = new FNote();
-//        int positionHome = viewHolder.getAdapterPosition();
-//        int positionEnd= target.getAdapterPosition();
-//        changeNote(dao, positionHome, positionEnd);
-//        return true;
-//    }
+    private void changeNote(int positionHome, int positionEnd) {
 
-//    private void changeNote(FNote dao, int positionHome, int positionEnd) {
-//        dao.change(positionHome, positionEnd);
-//        adapter.change(positionHome, positionEnd);
-//    }
+        adapter.change(positionHome, positionEnd);
+    }
+
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {

@@ -24,6 +24,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
     private final Context context;
     private OnItemClickListener onItemClickListener;
     private NoteDao dao;
+
     public ListNotesAdapter(Context context, List<Note> notes, NoteDao dao) {
         this.context = context;
         this.notes = notes;
@@ -64,7 +65,8 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         return notes.get(position).getId();
     }
 
-    public void updateNotePosition() {
+
+    private void updateNotePosition() {
 
         for (int i = 0; i < notes.size(); i++) {
             if (notes.get(i).getPosition() != i) {
@@ -88,6 +90,18 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         Collections.swap(notes, positionHome, positionEnd);
         notifyDataSetChanged();
         notifyItemMoved(positionHome, positionEnd);
+        changePositionDao(positionHome, positionEnd);
+
+
+    }
+
+    private void changePositionDao(int positionHome, int positionEnd) {
+        Note noteHomeDao = notes.get(positionHome);
+        Note noteEndDao = notes.get(positionEnd);
+        noteHomeDao.setPosition(noteEndDao.getPosition());
+        noteEndDao.setPosition(noteHomeDao.getPosition());
+        new SavePositionTask(dao, noteHomeDao).execute();
+        new SavePositionTask(dao, noteEndDao).execute();
     }
 
     public void addNote(Note note) {
@@ -122,7 +136,6 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
                 }
             });
         }
-
 
         private void setValuesAdapter(Note note) {
             this.note = note;

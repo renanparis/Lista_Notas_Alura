@@ -9,12 +9,12 @@ import java.util.List;
 
 public class SearchAllNotes extends AsyncTask<Void, Void, List<Note>> {
 
-    private FinishListener listener;
+    private FinishListenerSearchAllNotes listener;
 
 
     private NoteDao dao;
 
-    public SearchAllNotes(NoteDao dao, FinishListener listener) {
+    public SearchAllNotes(NoteDao dao, FinishListenerSearchAllNotes listener) {
         this.listener = listener;
         this.dao = dao;
     }
@@ -33,7 +33,7 @@ public class SearchAllNotes extends AsyncTask<Void, Void, List<Note>> {
 
     }
 
-    public interface FinishListener{
+    public interface FinishListenerSearchAllNotes {
 
         void whenItEnds(List<Note> notes);
     }
