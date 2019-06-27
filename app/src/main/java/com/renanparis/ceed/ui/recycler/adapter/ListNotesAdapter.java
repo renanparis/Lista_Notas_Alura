@@ -90,19 +90,20 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         Collections.swap(notes, positionHome, positionEnd);
         notifyDataSetChanged();
         notifyItemMoved(positionHome, positionEnd);
-        changePositionDao(positionHome, positionEnd);
+        updateNotePosition();
+//        changePositionDao(positionHome, positionEnd);
 
 
     }
-
-    private void changePositionDao(int positionHome, int positionEnd) {
-        Note noteHomeDao = notes.get(positionHome);
-        Note noteEndDao = notes.get(positionEnd);
-        noteHomeDao.setPosition(noteEndDao.getPosition());
-        noteEndDao.setPosition(noteHomeDao.getPosition());
-        new SavePositionTask(dao, noteHomeDao).execute();
-        new SavePositionTask(dao, noteEndDao).execute();
-    }
+//
+//    private void changePositionDao(int positionHome, int positionEnd) {
+//        Note noteHomeDao = notes.get(positionHome);
+//        Note noteEndDao = notes.get(positionEnd);
+//        noteHomeDao.setPosition(noteEndDao.getPosition());
+//        noteEndDao.setPosition(noteHomeDao.getPosition());
+//        new SavePositionTask(dao, noteHomeDao).execute();
+//        new SavePositionTask(dao, noteEndDao).execute();
+//    }
 
     public void addNote(Note note) {
         notes.add(0, note);

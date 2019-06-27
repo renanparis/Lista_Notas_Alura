@@ -85,8 +85,16 @@ public class ListNotesActivity extends AppCompatActivity {
                 preferences.setLinearMode(false);
                 invalidateOptionsMenu();
                 break;
+
+            case R.id.ic_feedback_activity:
+                goToFeedback();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goToFeedback() {
+        Intent goToFeedback = new Intent(this, FeedBackActivity.class);
+        startActivity(goToFeedback);
     }
 
     @Override
@@ -217,6 +225,7 @@ public class ListNotesActivity extends AppCompatActivity {
         Intent sendDataToForm = new Intent(ListNotesActivity.this, FormNoteActivity.class);
         sendDataToForm.putExtra(KEY_NOTE, note);
         startActivityForResult(sendDataToForm, REQUEST_CODE_UPDATE_NOTE);
+        Toast.makeText(this, "Posição " + note.getPosition(), Toast.LENGTH_SHORT).show();
     }
 
 }

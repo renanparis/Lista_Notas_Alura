@@ -18,4 +18,12 @@
 
     </item>
 
+    <item
+        android:id="@+id/ic_feedback_activity"
+        android:title="Help_feedback"
+        android:icon="@drawable/ic__feedback_activity"
+        app:showAsAction="always">
+
+    </item>
+
 </menu>
