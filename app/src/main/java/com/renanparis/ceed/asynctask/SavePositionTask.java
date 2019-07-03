@@ -22,4 +22,5 @@ public class SavePositionTask extends AsyncTask<Void, Void, Void> {
         dao.saveNote(note);
         return null;
     }
+
 }

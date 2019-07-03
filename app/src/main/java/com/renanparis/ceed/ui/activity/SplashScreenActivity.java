@@ -38,21 +38,11 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void delayHalfSecond() {
-        handle.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                goToListNotes();
-            }
-        }, 500);
+        handle.postDelayed(this::goToListNotes, 500);
     }
 
     private void delayTwoSeconds() {
-        handle.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                goToListNotes();
-            }
-        }, 2000);
+        handle.postDelayed(this::goToListNotes, 2000);
     }
 
     private void goToListNotes() {

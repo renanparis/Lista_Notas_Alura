@@ -16,7 +16,7 @@ import java.util.List;
 public interface NoteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Long saveNote(Note note);
+    long saveNote(Note note);
 
     @Query("SELECT * FROM note ORDER BY position")
     List<Note> searchAllNotes();
@@ -27,6 +27,4 @@ public interface NoteDao {
     @Delete
     void remove(Note note);
 
-    @Query("SELECT * FROM note WHERE id = :id")
-    Note searchNoteById(long id);
 }

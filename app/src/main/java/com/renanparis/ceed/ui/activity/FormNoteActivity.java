@@ -85,12 +85,9 @@ public class FormNoteActivity extends AppCompatActivity {
         configLayoutManager();
         FormAdapter adapter = new FormAdapter(listColors, this);
         paletteColors.setAdapter(adapter);
-        adapter.setOnItemClickListener(new FormAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Integer color) {
-                backgroundForm.setBackgroundColor(color);
-                note.setColor(color);
-            }
+        adapter.setOnItemClickListener(color -> {
+            backgroundForm.setBackgroundColor(color);
+            note.setColor(color);
         });
     }
 
@@ -115,6 +112,7 @@ public class FormNoteActivity extends AppCompatActivity {
 
     private int searchWhiteColor() {
         Colors color = new Colors();
+
         return color.getWhite();
     }
 

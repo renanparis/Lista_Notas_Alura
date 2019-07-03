@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.renanparis.ceed.R;
 import com.renanparis.ceed.asynctask.RemoveNoteTask;
-import com.renanparis.ceed.asynctask.SavePositionTask;
+import com.renanparis.ceed.asynctask.UpdateNoteTask;
 import com.renanparis.ceed.database.dao.NoteDao;
 import com.renanparis.ceed.model.Note;
 
@@ -71,7 +71,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         for (int i = 0; i < notes.size(); i++) {
             if (notes.get(i).getPosition() != i) {
                 notes.get(i).setPosition(i);
-                new SavePositionTask(dao, notes.get(i));
+                new UpdateNoteTask(dao, notes.get(i)).execute();
 
             }
         }
@@ -91,19 +91,8 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
         notifyDataSetChanged();
         notifyItemMoved(positionHome, positionEnd);
         updateNotePosition();
-//        changePositionDao(positionHome, positionEnd);
-
 
     }
-//
-//    private void changePositionDao(int positionHome, int positionEnd) {
-//        Note noteHomeDao = notes.get(positionHome);
-//        Note noteEndDao = notes.get(positionEnd);
-//        noteHomeDao.setPosition(noteEndDao.getPosition());
-//        noteEndDao.setPosition(noteHomeDao.getPosition());
-//        new SavePositionTask(dao, noteHomeDao).execute();
-//        new SavePositionTask(dao, noteEndDao).execute();
-//    }
 
     public void addNote(Note note) {
         notes.add(0, note);
@@ -130,12 +119,7 @@ public class ListNotesAdapter extends RecyclerView.Adapter<ListNotesAdapter.Note
             title = itemView.findViewById(R.id.item_note_title);
             description = itemView.findViewById(R.id.item_note_description);
             backgroundItem = itemView;
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onItemClick(note);
-                }
-            });
+            itemView.setOnClickListener(v -> onItemClickListener.onItemClick(note));
         }
 
         private void setValuesAdapter(Note note) {

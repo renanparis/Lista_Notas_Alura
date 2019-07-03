@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +35,8 @@ import static com.renanparis.ceed.ui.activity.ConstantsActivityNotes.REQUEST_COD
 public class ListNotesActivity extends AppCompatActivity {
 
     public static final String TITLE_APPBAR = "Notas";
+    public static final int GRID_SPAN_COUNT = 2;
+    public static final int GRID_ORIENTATION = 1;
     private ListNotesAdapter adapter;
     private RecyclerView listNotes;
     private NotesPreferences preferences;
@@ -56,12 +57,7 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void configList() {
-        new SearchAllNotes(dao, new SearchAllNotes.FinishListenerSearchAllNotes() {
-            @Override
-            public void whenItEnds(List<Note> notes) {
-                configRecyclerView(notes);
-            }
-        }).execute();
+        new SearchAllNotes(dao, this::configRecyclerView).execute();
     }
 
     @Override
@@ -120,18 +116,13 @@ public class ListNotesActivity extends AppCompatActivity {
     }
 
     private void configStaggeredGridManager() {
-        StaggeredGridLayoutManager grid = new StaggeredGridLayoutManager(2, 1);
+        StaggeredGridLayoutManager grid = new StaggeredGridLayoutManager(GRID_SPAN_COUNT, GRID_ORIENTATION);
         listNotes.setLayoutManager(grid);
     }
 
     private void configButtonInsertNote() {
         TextView insertNote = findViewById(R.id.list_notes_insert_note);
-        insertNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToInsertNoteFormActivity();
-            }
-        });
+        insertNote.setOnClickListener(v -> goToInsertNoteFormActivity());
     }
 
     private void goToInsertNoteFormActivity() {
@@ -147,14 +138,14 @@ public class ListNotesActivity extends AppCompatActivity {
                 if (data != null) {
                     note = data.getParcelableExtra(KEY_NOTE);
                 }
-                new SaveNoteTask(dao, note, id -> {
-                    note.setId(id);
-                    adapter.addNote(note);
-                    Toast.makeText(ListNotesActivity.this,
-                            "Nota incluída com Sucesso " + note.getId(), Toast.LENGTH_SHORT).show();
-
-                }).execute();
+              new SaveNoteTask(dao, note, id -> {
+                  note.setId(id);
+                  adapter.addNote(note);
+                  Toast.makeText(ListNotesActivity.this,
+                          "Nota criada com sucesso", Toast.LENGTH_SHORT).show();
+              }).execute();
             }
+
         }
 
         if (isaRequestCodeUpdateNote(requestCode)) {
@@ -218,14 +209,13 @@ public class ListNotesActivity extends AppCompatActivity {
     private void configAdapter(List<Note> list, RecyclerView listNotes) {
         adapter = new ListNotesAdapter(this, list, dao);
         listNotes.setAdapter(adapter);
-        adapter.setOnItemClickListener((note) -> goToUpdateNoteFormActivity(note));
+        adapter.setOnItemClickListener(this::goToUpdateNoteFormActivity);
     }
 
     private void goToUpdateNoteFormActivity(Note note) {
         Intent sendDataToForm = new Intent(ListNotesActivity.this, FormNoteActivity.class);
         sendDataToForm.putExtra(KEY_NOTE, note);
         startActivityForResult(sendDataToForm, REQUEST_CODE_UPDATE_NOTE);
-        Toast.makeText(this, "Posição " + note.getPosition(), Toast.LENGTH_SHORT).show();
     }
 
 }
