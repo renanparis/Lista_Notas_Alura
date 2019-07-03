@@ -12,12 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:background="@android:color/transparent"
-        android:hint="Título"
+        android:hint="@string/title"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints=""
+        android:inputType="" tools:targetApi="o"/>
 
     <EditText
         android:id="@+id/form_note_description"
@@ -26,12 +28,14 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
-        android:hint="Descrição"
+        android:hint="@string/description"
         android:gravity="top"
         app:layout_constraintBottom_toTopOf="@+id/form_list_colors"
         app:layout_constraintEnd_toEndOf="@id/form_note_title"
         app:layout_constraintStart_toStartOf="@id/form_note_title"
-        app:layout_constraintTop_toBottomOf="@id/form_note_title" />
+        app:layout_constraintTop_toBottomOf="@id/form_note_title"
+        android:autofillHints=""
+        android:inputType="" tools:targetApi="o"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/form_list_colors"

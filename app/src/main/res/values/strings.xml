@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Ceep</string>
+    <string name="warning_feedback">Deixe o seu feedback!:)</string>
+    <string name="field_email">E-mail</string>
+    <string name="field_feedback">Escreva seu feedback</string>
+    <string name="app_suggestions">Envie dúvidas ou sugestões sobre sua experiência com o Ceep. Usaremos as informações fornecidas para aprimorar a experiência da app.</string>
+    <string name="description">Descrição</string>
+    <string name="title">Título</string>
+    <string name="insert_note">Inserir uma nota</string>
+    <string name="image_description">Imagem da empresa ceep</string>
+    <string name="send_feedback">Enviar feedback</string>
+    <string name="linear_layout">Linear_layout</string>
+    <string name="grid_layout">Grid_layout</string>
+    <string name="help_feedback">Help_feedback</string>
+    <string name="save_note">Salvar Nota</string>
 </resources>

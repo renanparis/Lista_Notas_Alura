@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/ic_feedback_send"
-        android:title="Enviar feedback"
+        android:title="@string/send_feedback"
         android:icon="@drawable/ic_send_feedback"
         app:showAsAction="always">
 

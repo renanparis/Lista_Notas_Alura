@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Linear_layout"
+        android:title="@string/linear_layout"
         android:id="@+id/list_linear_layout"
         android:icon="@drawable/ic_layout_linear"
         app:showAsAction="always">
@@ -11,7 +11,7 @@
     </item>
 
     <item
-        android:title="Grid_layout"
+        android:title="@string/grid_layout"
         android:id="@+id/list_grid_layout"
         android:icon="@drawable/ic_layout_grid"
         app:showAsAction="always">
@@ -20,7 +20,7 @@
 
     <item
         android:id="@+id/ic_feedback_activity"
-        android:title="Help_feedback"
+        android:title="@string/help_feedback"
         android:icon="@drawable/ic__feedback_activity"
         app:showAsAction="always">
 

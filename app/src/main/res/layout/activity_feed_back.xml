@@ -14,7 +14,9 @@
         android:background="@drawable/feedback_banner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ImageView>
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +24,7 @@
         android:layout_margin="8dp"
         android:background="@android:drawable/screen_background_dark_transparent"
         android:padding="8dp"
-        android:text="Deixe o seu feedback!:)"
+        android:text="@string/warning_feedback"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/feedback_activity_image"
@@ -44,7 +46,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="E-mail"
+            android:hint="@string/field_email"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,7 +62,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Escreva seu feedback"
+            android:hint="@string/field_feedback"
             android:inputType="text" />
         
     </com.google.android.material.textfield.TextInputLayout>
@@ -74,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/feedback_activity_feedback"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0"
-        android:text="Envie dúvidas ou sugestões sobre sua experiência com o Ceep. Usaremos as informações fornecidas para aprimorar a experiência da app. "
+        android:text="@string/app_suggestions"
         android:textSize="14sp"
         android:layout_marginTop="18dp"/>
 
